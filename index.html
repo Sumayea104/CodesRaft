@@ -2,111 +2,142 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#02020a">
 <title>CodesRaft | Employee Directory</title>
 <style>
+  /* =========================================================
+     1. Variables
+     ========================================================= */
   :root {
-    --gold: #7aa2ff;           
-    --gold-soft: rgba(122, 162, 255, .35);
+    --bg: #02020a;
     --blue: #4f8cff;
     --purple: #9b6bff;
-    --violet-glow: rgba(155, 107, 255, .35);
-    --blue-glow: rgba(79, 140, 255, .35);
-    --ink: #000;
-    --text: #fff;
-    --muted: #b8b8b8;
+    --accent: #9fb4ff;
+    --line: rgba(122, 162, 255, .30);
+    --glow-blue: rgba(79, 140, 255, .35);
+    --glow-purple: rgba(155, 107, 255, .35);
+    --text: #ffffff;
+    --muted: #b9b9d0;
+
+    --page-pad: clamp(18px, 4vw, 40px);
+    --gap: clamp(14px, 2.4vw, 26px);
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* =========================================================
+     2. Reset / base
+     ========================================================= */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
 
   body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    font-family: "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+    color: var(--text);
     background:
       radial-gradient(600px 400px at 15% 0%, rgba(79,140,255,.18), transparent 70%),
       radial-gradient(600px 400px at 85% 10%, rgba(155,107,255,.20), transparent 70%),
-      #02020a fixed;
-    font-family: "Segoe UI", Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 35px 20px;
-    min-height: 100vh;
+      var(--bg);
+    background-attachment: fixed;
+    padding:
+      max(clamp(12px, 3vw, 35px), env(safe-area-inset-top))
+      max(clamp(12px, 3vw, 35px), env(safe-area-inset-right))
+      max(clamp(12px, 3vw, 35px), env(safe-area-inset-bottom))
+      max(clamp(12px, 3vw, 35px), env(safe-area-inset-left));
   }
 
+  img { max-width: 100%; }
+
+  /* =========================================================
+     3. Page container
+     ========================================================= */
   .page {
     width: 100%;
     max-width: 1080px;
-    background: linear-gradient(160deg, #101010 0%, #000 100%);
-    border: 1px solid var(--gold-soft);
-    border-radius: 22px;
-    padding: 40px;
-    box-shadow: 0 30px 80px rgba(0, 0, 0, .8);
+    padding: var(--page-pad);
+    background: linear-gradient(160deg, #101018 0%, #000 100%);
+    border: 1px solid var(--line);
+    border-radius: clamp(14px, 2vw, 22px);
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, .85),
+      0 0 90px rgba(79, 140, 255, .10),
+      0 0 120px rgba(155, 107, 255, .10);
   }
 
-  /* ---------- Header ---------- */
+  /* =========================================================
+     4. Header
+     ========================================================= */
   .header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    gap: 20px;
-    padding-bottom: 28px;
-    margin-bottom: 36px;
-    border-bottom: 1px solid var(--gold-soft);
+    gap: var(--gap);
+    padding-bottom: clamp(16px, 3vw, 28px);
+    margin-bottom: clamp(20px, 3.5vw, 36px);
+    border-bottom: 1px solid var(--line);
   }
 
   .logo-box:first-child { justify-self: start; }
   .logo-box:last-child  { justify-self: end; }
 
-  /* Logos: bigger + clean frame so they read sharply */
   .logo {
     display: block;
-    width: 280px;
-    height: 120px;
+    width: clamp(110px, 24vw, 280px);
+    height: auto;
+    aspect-ratio: 280 / 120;
     object-fit: contain;
-    background: #0a0a0a;
-    border: 1px solid rgba(122, 162, 255, .7);
-    border-radius: 18px;
     padding: 6px;
-    box-shadow: 0 0 0 4px rgba(122, 162, 255, .06),
-                0 8px 24px rgba(0, 0, 0, .6);
-    image-rendering: -webkit-optimize-contrast;
+    background: #0a0a12;
+    border: 1px solid rgba(140, 150, 255, .7);
+    border-radius: clamp(12px, 1.6vw, 18px);
+    box-shadow:
+      0 0 0 4px rgba(122, 162, 255, .07),
+      0 0 26px var(--glow-blue),
+      0 0 40px rgba(155, 107, 255, .22);
     transition: box-shadow .4s ease, transform .4s ease;
-  }
-
-  .logo:hover {
-    transform: scale(1.04);
-    box-shadow: 0 0 0 4px rgba(122, 162, 255, .14),
-                0 0 28px rgba(122, 162, 255, .35);
   }
 
   .header-center { text-align: center; }
 
   .company-name {
-    color: var(--text);
-    font-size: 34px;
+    font-size: clamp(22px, 4.2vw, 34px);
     font-weight: 700;
-    letter-spacing: 6px;
+    letter-spacing: clamp(3px, .8vw, 6px);
     text-transform: uppercase;
+    background: linear-gradient(90deg, #ffffff 0%, #bcd0ff 45%, #cdb6ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 0 14px rgba(120, 150, 255, .45));
   }
 
   .company-sub {
     margin-top: 8px;
-    color: var(--gold);
-    font-size: 13px;
-    letter-spacing: 7px;
+    color: #a9b8ff;
+    font-size: clamp(10px, 1.5vw, 13px);
+    letter-spacing: clamp(3px, 1vw, 7px);
     text-transform: uppercase;
   }
 
-  /* The one signature motion: a gold light travels along the line */
-  .gold-line {
+  .glow-line {
     position: relative;
-    width: 160px;
+    width: clamp(110px, 16vw, 160px);
     height: 2px;
     margin: 14px auto 0;
     background: linear-gradient(90deg, transparent, var(--blue), var(--purple), transparent);
-    box-shadow: 0 0 14px var(--violet-glow);
+    box-shadow: 0 0 14px var(--glow-purple);
     overflow: hidden;
   }
 
-  .gold-line::after {
+  .glow-line::after {
     content: "";
     position: absolute;
     top: 0;
@@ -122,24 +153,29 @@
     80%, 100% { left: 110%; }
   }
 
-  /* ---------- Cards ---------- */
+  /* =========================================================
+     5. Cards grid
+     ========================================================= */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 26px;
+    gap: var(--gap);
   }
 
   .card {
     position: relative;
-    background: linear-gradient(180deg, #161616 0%, #0d0d0d 100%);
-    border: 1px solid #2b2b2b;
-    border-radius: 18px;
-    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: clamp(12px, 1.6vw, 18px);
     text-align: center;
     overflow: hidden;
-    transition: border-color .35s ease, transform .35s ease, box-shadow .35s ease;
+    background: linear-gradient(180deg, #11111f 0%, #07070f 100%);
+    border: 1px solid #23233a;
+    border-radius: 18px;
     animation: rise .7s cubic-bezier(.2, .7, .2, 1) both;
     animation-delay: calc(var(--i) * 90ms + 150ms);
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
   }
 
   @keyframes rise {
@@ -151,51 +187,68 @@
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(122, 162, 255,.08), transparent 40%);
+    background: linear-gradient(180deg, rgba(122, 162, 255, .10), transparent 40%);
     pointer-events: none;
   }
 
-  .card:hover {
-    border-color: rgba(122, 162, 255, .8);
-    transform: translateY(-6px);
-    box-shadow: 0 18px 40px rgba(0, 0, 0, .6);
+  /* gradient ring (visible on hover / focus) */
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    padding: 1px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .4s ease;
+    pointer-events: none;
   }
 
   .photo-wrap {
+    border: 1px solid rgba(140, 150, 255, .5);
     border-radius: 14px;
-    border: 1px solid rgba(122, 162, 255, .55);
     overflow: hidden;
-    background: #1a1a1a;
+    background: #1a1a28;
   }
 
+  /* taller portrait photo */
   .photo {
     display: block;
     width: 100%;
-    height: 230px;
+    height: auto;
+    aspect-ratio: 3 / 4;
     object-fit: cover;
     object-position: top center;
     transition: transform .6s ease;
   }
 
-  .card:hover .photo { transform: scale(1.05); }
+  .info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 6px;
+  }
 
   .name {
-    margin-top: 15px;
-    color: var(--text);
-    font-size: 18px;
+    margin-top: 14px;
+    font-size: clamp(16px, 2.2vw, 18px);
     font-weight: 600;
     letter-spacing: .5px;
+    overflow-wrap: anywhere;
   }
 
   .divider {
     width: 45px;
-    height: 1px;
+    height: 2px;
     margin: 12px auto 0;
-    background: rgba(122, 162, 255, .6);
+    background: linear-gradient(90deg, var(--blue), var(--purple));
+    box-shadow: 0 0 10px var(--glow-purple);
     transition: width .35s ease;
   }
-
-  .card:hover .divider { width: 90px; }
 
   .role {
     margin-top: 10px;
@@ -206,9 +259,10 @@
   .role h3 {
     font-size: 12px;
     font-weight: 500;
-    color: var(--gold);
+    color: var(--accent);
     letter-spacing: 1px;
     text-transform: uppercase;
+    overflow-wrap: anywhere;
   }
 
   .role h3:last-child {
@@ -217,24 +271,77 @@
     letter-spacing: .3px;
   }
 
-  /* ---------- Responsive ---------- */
+  /* =========================================================
+     6. Interaction (only on devices that can hover)
+     ========================================================= */
+  @media (hover: hover) {
+    .logo:hover {
+      transform: scale(1.04);
+      box-shadow:
+        0 0 0 4px rgba(122, 162, 255, .16),
+        0 0 34px rgba(79, 140, 255, .6),
+        0 0 56px rgba(155, 107, 255, .45);
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: transparent;
+      box-shadow:
+        0 18px 44px rgba(0, 0, 0, .65),
+        0 0 34px rgba(79, 140, 255, .28),
+        0 0 50px rgba(155, 107, 255, .22);
+    }
+
+    .card:hover::after { opacity: 1; }
+    .card:hover .photo { transform: scale(1.05); }
+    .card:hover .divider { width: 90px; }
+  }
+
+  /* =========================================================
+     7. Responsive breakpoints
+     ========================================================= */
+
+  /* Tablet: 2 columns */
   @media (max-width: 900px) {
     .grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (max-width: 640px) {
-    .page { padding: 24px 18px; }
+  /* Phone: stacked header, 1 column */
+  @media (max-width: 720px) {
     .header { grid-template-columns: 1fr 1fr; }
     .header-center { grid-column: 1 / -1; grid-row: 2; }
-    .logo { width: 88px; height: 88px; }
-    .company-name { font-size: 26px; letter-spacing: 4px; }
-    .company-sub { letter-spacing: 5px; }
-    .grid { grid-template-columns: 1fr; }
-    .photo { height: 280px; }
+    .logo { width: min(100%, 190px); }
+
+    .grid {
+      grid-template-columns: 1fr;
+      max-width: 420px;
+      margin-inline: auto;
+    }
+
+    .photo { aspect-ratio: 4 / 5; }
   }
 
-  /* Keyboard focus + reduced motion */
-  .logo:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+  /* Very small phones */
+  @media (max-width: 360px) {
+    .company-name { letter-spacing: 2px; }
+    .company-sub  { letter-spacing: 2px; }
+  }
+
+  /* Phone landscape */
+  @media (max-height: 480px) and (orientation: landscape) {
+    .grid { grid-template-columns: repeat(3, 1fr); max-width: none; }
+    .photo { aspect-ratio: 1 / 1; }
+  }
+
+  /* Large screens / TV */
+  @media (min-width: 1600px) {
+    .page { max-width: 1240px; }
+  }
+
+  /* =========================================================
+     8. Accessibility + print
+     ========================================================= */
+  .card:focus-within::after { opacity: 1; }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -246,71 +353,8 @@
   @media print {
     body { background: #000; padding: 0; }
     .page { max-width: 100%; border-radius: 0; box-shadow: none; }
-    .card { animation: none; }
-    .card:hover { transform: none; box-shadow: none; }
+    .card { animation: none; break-inside: avoid; }
   }
-
-  /* ---------- Luminous blue / purple layer ---------- */
-  .page {
-    border-color: rgba(122, 162, 255, .3);
-    box-shadow: 0 30px 80px rgba(0,0,0,.85),
-                0 0 90px rgba(79,140,255,.10),
-                0 0 120px rgba(155,107,255,.10);
-  }
-
-  .company-name {
-    background: linear-gradient(90deg, #ffffff 0%, #bcd0ff 45%, #cdb6ff 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: none;
-    filter: drop-shadow(0 0 14px rgba(120,150,255,.45));
-  }
-
-  .company-sub { color: #a9b8ff; }
-
-  .logo {
-    border-color: rgba(140, 150, 255, .7);
-    box-shadow: 0 0 0 4px rgba(122,162,255,.07),
-                0 0 26px rgba(79,140,255,.35),
-                0 0 40px rgba(155,107,255,.22);
-  }
-  .logo:hover {
-    box-shadow: 0 0 0 4px rgba(122,162,255,.16),
-                0 0 34px rgba(79,140,255,.6),
-                0 0 56px rgba(155,107,255,.45);
-  }
-
-  .card { background: linear-gradient(180deg, #11111f 0%, #07070f 100%); border-color: #23233a; }
-  .card::before { background: linear-gradient(180deg, rgba(122,162,255,.10), transparent 40%); }
-
-  /* gradient glow ring appears on hover */
-  .card::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(135deg, var(--blue), var(--purple));
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-            mask-composite: exclude;
-    opacity: 0;
-    transition: opacity .4s ease;
-    pointer-events: none;
-  }
-  .card:hover { border-color: transparent;
-    box-shadow: 0 18px 44px rgba(0,0,0,.65), 0 0 34px rgba(79,140,255,.28), 0 0 50px rgba(155,107,255,.22); }
-  .card:hover::after { opacity: 1; }
-
-  .photo-wrap { border-color: rgba(140,150,255,.5); }
-
-  .divider { background: linear-gradient(90deg, var(--blue), var(--purple)); box-shadow: 0 0 10px var(--violet-glow); height: 2px; }
-
-  .role h3 { color: #9fb4ff; }
-  .role h3:last-child { color: #b9b9d0; }
-
-  .logo:focus-visible { outline-color: var(--purple); }
 </style>
 </head>
 <body>
@@ -319,79 +363,91 @@
 
   <header class="header">
     <div class="logo-box">
-      <img src="assets/logo.png" alt="CodesRaft logo" class="logo" width="240" height="240" decoding="async">
+      <img src="assets/logo.png" alt="CodesRaft logo" class="logo" width="280" height="120" decoding="async">
     </div>
 
     <div class="header-center">
-      <div class="company-name">CodesRaft</div>
-      <div class="company-sub">Employee Directory</div>
-      <div class="gold-line"></div>
+      <h1 class="company-name">CodesRaft</h1>
+      <p class="company-sub">Employee Directory</p>
+      <div class="glow-line"></div>
     </div>
 
     <div class="logo-box">
-      <img src="assets/Purls-Logo.png" alt="Purls logo" class="logo" width="240" height="240" decoding="async">
+      <img src="assets/Purls-Logo.png" alt="Purls logo" class="logo" width="280" height="120" decoding="async">
     </div>
   </header>
 
   <main class="grid">
 
     <article class="card" style="--i:0">
-      <div class="photo-wrap"><img src="assets/arafat.jpeg" class="photo" alt="Soyeb Ahmed Arafat" loading="lazy"></div>
-      <div class="name">Soyeb Ahmed Arafat</div>
-      <div class="divider"></div>
-      <div class="role">
-        <h3>Founder</h3>
-        <h3>CodesRaft</h3>
+      <div class="photo-wrap"><img src="assets/arafat.jpeg" class="photo" alt="Soyeb Ahmed Arafat" loading="lazy" decoding="async"></div>
+      <div class="info">
+        <div class="name">Soyeb Ahmed Arafat</div>
+        <div class="divider"></div>
+        <div class="role">
+          <h3>Founder</h3>
+          <h3>CodesRaft</h3>
+        </div>
       </div>
     </article>
 
     <article class="card" style="--i:1">
-      <div class="photo-wrap"><img src="assets/mukta.jpeg" class="photo" alt="Mukta Roy" loading="lazy"></div>
-      <div class="name">Mukta Roy</div>
-      <div class="divider"></div>
-      <div class="role">
-        <h3>Master of Science</h3>
-        <h3>National University, Bangladesh</h3>
+      <div class="photo-wrap"><img src="assets/mukta.jpeg" class="photo" alt="Mukta Roy" loading="lazy" decoding="async"></div>
+      <div class="info">
+        <div class="name">Mukta Roy</div>
+        <div class="divider"></div>
+        <div class="role">
+          <h3>Master of Science</h3>
+          <h3>National University, Bangladesh</h3>
+        </div>
       </div>
     </article>
 
     <article class="card" style="--i:2">
-      <div class="photo-wrap"><img src="assets/Rafi.jpeg" class="photo" alt="Rafi Shariar" loading="lazy"></div>
-      <div class="name">Rafi Shariar</div>
-      <div class="divider"></div>
-      <div class="role">
-        <h3>B.Sc. in Computer Science &amp; Engineering</h3>
-        <h3>Daffodil International University</h3>
+      <div class="photo-wrap"><img src="assets/Rafi.jpeg" class="photo" alt="Rafi Shariar" loading="lazy" decoding="async"></div>
+      <div class="info">
+        <div class="name">Rafi Shariar</div>
+        <div class="divider"></div>
+        <div class="role">
+          <h3>B.Sc. in Computer Science &amp; Engineering</h3>
+          <h3>Daffodil International University</h3>
+        </div>
       </div>
     </article>
 
     <article class="card" style="--i:3">
-      <div class="photo-wrap"><img src="assets/sumaya.jpeg" class="photo" alt="Sumaya Islam" loading="lazy"></div>
-      <div class="name">Sumaya Islam</div>
-      <div class="divider"></div>
-      <div class="role">
-        <h3>Bachelor of Arts in English</h3>
-        <h3>Dhaka University</h3>
+      <div class="photo-wrap"><img src="assets/sumaya.jpeg" class="photo" alt="Sumaya Islam" loading="lazy" decoding="async"></div>
+      <div class="info">
+        <div class="name">Sumaya Islam</div>
+        <div class="divider"></div>
+        <div class="role">
+          <h3>Bachelor of Arts in English</h3>
+          <h3>Dhaka University</h3>
+        </div>
       </div>
     </article>
 
     <article class="card" style="--i:4">
-      <div class="photo-wrap"><img src="assets/Seam.jpeg" class="photo" alt="Sultan Nasir Uddin Seam" loading="lazy"></div>
-      <div class="name">Sultan Nasir Uddin Seam</div>
-      <div class="divider"></div>
-      <div class="role">
-        <h3>B.Sc. in Computer Science &amp; Engineering</h3>
-        <h3>Green University Bangladesh</h3>
+      <div class="photo-wrap"><img src="assets/Seam.jpeg" class="photo" alt="Sultan Nasir Uddin Seam" loading="lazy" decoding="async"></div>
+      <div class="info">
+        <div class="name">Sultan Nasir Uddin Seam</div>
+        <div class="divider"></div>
+        <div class="role">
+          <h3>B.Sc. in Computer Science &amp; Engineering</h3>
+          <h3>Green University Bangladesh</h3>
+        </div>
       </div>
     </article>
 
     <article class="card" style="--i:5">
-      <div class="photo-wrap"><img src="assets/suma.jpeg" class="photo" alt="Sumayea Rahman" loading="lazy"></div>
-      <div class="name">Sumayea Rahman</div>
-      <div class="divider"></div>
-      <div class="role">
-        <h3>BBA &amp; MBA in Finance and Banking</h3>
-        <h3>Jagannath University</h3>
+      <div class="photo-wrap"><img src="assets/suma.jpeg" class="photo" alt="Sumayea Rahman" loading="lazy" decoding="async"></div>
+      <div class="info">
+        <div class="name">Sumayea Rahman</div>
+        <div class="divider"></div>
+        <div class="role">
+          <h3>BBA &amp; MBA in Finance and Banking</h3>
+          <h3>Jagannath University</h3>
+        </div>
       </div>
     </article>
 
