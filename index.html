@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CodesRaft | Employee Directory</title>
+<style>
+  :root {
+    --gold: #7aa2ff;           
+    --gold-soft: rgba(122, 162, 255, .35);
+    --blue: #4f8cff;
+    --purple: #9b6bff;
+    --violet-glow: rgba(155, 107, 255, .35);
+    --blue-glow: rgba(79, 140, 255, .35);
+    --ink: #000;
+    --text: #fff;
+    --muted: #b8b8b8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background:
+      radial-gradient(600px 400px at 15% 0%, rgba(79,140,255,.18), transparent 70%),
+      radial-gradient(600px 400px at 85% 10%, rgba(155,107,255,.20), transparent 70%),
+      #02020a fixed;
+    font-family: "Segoe UI", Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 35px 20px;
+    min-height: 100vh;
+  }
+
+  .page {
+    width: 100%;
+    max-width: 1080px;
+    background: linear-gradient(160deg, #101010 0%, #000 100%);
+    border: 1px solid var(--gold-soft);
+    border-radius: 22px;
+    padding: 40px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .8);
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 20px;
+    padding-bottom: 28px;
+    margin-bottom: 36px;
+    border-bottom: 1px solid var(--gold-soft);
+  }
+
+  .logo-box:first-child { justify-self: start; }
+  .logo-box:last-child  { justify-self: end; }
+
+  /* Logos: bigger + clean frame so they read sharply */
+  .logo {
+    display: block;
+    width: 280px;
+    height: 120px;
+    object-fit: contain;
+    background: #0a0a0a;
+    border: 1px solid rgba(122, 162, 255, .7);
+    border-radius: 18px;
+    padding: 6px;
+    box-shadow: 0 0 0 4px rgba(122, 162, 255, .06),
+                0 8px 24px rgba(0, 0, 0, .6);
+    image-rendering: -webkit-optimize-contrast;
+    transition: box-shadow .4s ease, transform .4s ease;
+  }
+
+  .logo:hover {
+    transform: scale(1.04);
+    box-shadow: 0 0 0 4px rgba(122, 162, 255, .14),
+                0 0 28px rgba(122, 162, 255, .35);
+  }
+
+  .header-center { text-align: center; }
+
+  .company-name {
+    color: var(--text);
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+  }
+
+  .company-sub {
+    margin-top: 8px;
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 7px;
+    text-transform: uppercase;
+  }
+
+  /* The one signature motion: a gold light travels along the line */
+  .gold-line {
+    position: relative;
+    width: 160px;
+    height: 2px;
+    margin: 14px auto 0;
+    background: linear-gradient(90deg, transparent, var(--blue), var(--purple), transparent);
+    box-shadow: 0 0 14px var(--violet-glow);
+    overflow: hidden;
+  }
+
+  .gold-line::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -40%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, #e8eeff, transparent);
+    animation: sweep 3.6s ease-in-out infinite;
+  }
+
+  @keyframes sweep {
+    0%, 35%   { left: -40%; }
+    80%, 100% { left: 110%; }
+  }
+
+  /* ---------- Cards ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+  }
+
+  .card {
+    position: relative;
+    background: linear-gradient(180deg, #161616 0%, #0d0d0d 100%);
+    border: 1px solid #2b2b2b;
+    border-radius: 18px;
+    padding: 16px;
+    text-align: center;
+    overflow: hidden;
+    transition: border-color .35s ease, transform .35s ease, box-shadow .35s ease;
+    animation: rise .7s cubic-bezier(.2, .7, .2, 1) both;
+    animation-delay: calc(var(--i) * 90ms + 150ms);
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(122, 162, 255,.08), transparent 40%);
+    pointer-events: none;
+  }
+
+  .card:hover {
+    border-color: rgba(122, 162, 255, .8);
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, .6);
+  }
+
+  .photo-wrap {
+    border-radius: 14px;
+    border: 1px solid rgba(122, 162, 255, .55);
+    overflow: hidden;
+    background: #1a1a1a;
+  }
+
+  .photo {
+    display: block;
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    object-position: top center;
+    transition: transform .6s ease;
+  }
+
+  .card:hover .photo { transform: scale(1.05); }
+
+  .name {
+    margin-top: 15px;
+    color: var(--text);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+
+  .divider {
+    width: 45px;
+    height: 1px;
+    margin: 12px auto 0;
+    background: rgba(122, 162, 255, .6);
+    transition: width .35s ease;
+  }
+
+  .card:hover .divider { width: 90px; }
+
+  .role {
+    margin-top: 10px;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+
+  .role h3 {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gold);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .role h3:last-child {
+    color: var(--muted);
+    text-transform: none;
+    letter-spacing: .3px;
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 24px 18px; }
+    .header { grid-template-columns: 1fr 1fr; }
+    .header-center { grid-column: 1 / -1; grid-row: 2; }
+    .logo { width: 88px; height: 88px; }
+    .company-name { font-size: 26px; letter-spacing: 4px; }
+    .company-sub { letter-spacing: 5px; }
+    .grid { grid-template-columns: 1fr; }
+    .photo { height: 280px; }
+  }
+
+  /* Keyboard focus + reduced motion */
+  .logo:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @media print {
+    body { background: #000; padding: 0; }
+    .page { max-width: 100%; border-radius: 0; box-shadow: none; }
+    .card { animation: none; }
+    .card:hover { transform: none; box-shadow: none; }
+  }
+
+  /* ---------- Luminous blue / purple layer ---------- */
+  .page {
+    border-color: rgba(122, 162, 255, .3);
+    box-shadow: 0 30px 80px rgba(0,0,0,.85),
+                0 0 90px rgba(79,140,255,.10),
+                0 0 120px rgba(155,107,255,.10);
+  }
+
+  .company-name {
+    background: linear-gradient(90deg, #ffffff 0%, #bcd0ff 45%, #cdb6ff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 0 14px rgba(120,150,255,.45));
+  }
+
+  .company-sub { color: #a9b8ff; }
+
+  .logo {
+    border-color: rgba(140, 150, 255, .7);
+    box-shadow: 0 0 0 4px rgba(122,162,255,.07),
+                0 0 26px rgba(79,140,255,.35),
+                0 0 40px rgba(155,107,255,.22);
+  }
+  .logo:hover {
+    box-shadow: 0 0 0 4px rgba(122,162,255,.16),
+                0 0 34px rgba(79,140,255,.6),
+                0 0 56px rgba(155,107,255,.45);
+  }
+
+  .card { background: linear-gradient(180deg, #11111f 0%, #07070f 100%); border-color: #23233a; }
+  .card::before { background: linear-gradient(180deg, rgba(122,162,255,.10), transparent 40%); }
+
+  /* gradient glow ring appears on hover */
+  .card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .4s ease;
+    pointer-events: none;
+  }
+  .card:hover { border-color: transparent;
+    box-shadow: 0 18px 44px rgba(0,0,0,.65), 0 0 34px rgba(79,140,255,.28), 0 0 50px rgba(155,107,255,.22); }
+  .card:hover::after { opacity: 1; }
+
+  .photo-wrap { border-color: rgba(140,150,255,.5); }
+
+  .divider { background: linear-gradient(90deg, var(--blue), var(--purple)); box-shadow: 0 0 10px var(--violet-glow); height: 2px; }
+
+  .role h3 { color: #9fb4ff; }
+  .role h3:last-child { color: #b9b9d0; }
+
+  .logo:focus-visible { outline-color: var(--purple); }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <header class="header">
+    <div class="logo-box">
+      <img src="assets/logo.png" alt="CodesRaft logo" class="logo" width="240" height="240" decoding="async">
+    </div>
+
+    <div class="header-center">
+      <div class="company-name">CodesRaft</div>
+      <div class="company-sub">Employee Directory</div>
+      <div class="gold-line"></div>
+    </div>
+
+    <div class="logo-box">
+      <img src="assets/Purls-Logo.png" alt="Purls logo" class="logo" width="240" height="240" decoding="async">
+    </div>
+  </header>
+
+  <main class="grid">
+
+    <article class="card" style="--i:0">
+      <div class="photo-wrap"><img src="assets/arafat.jpeg" class="photo" alt="Soyeb Ahmed Arafat" loading="lazy"></div>
+      <div class="name">Soyeb Ahmed Arafat</div>
+      <div class="divider"></div>
+      <div class="role">
+        <h3>Founder</h3>
+        <h3>CodesRaft</h3>
+      </div>
+    </article>
+
+    <article class="card" style="--i:1">
+      <div class="photo-wrap"><img src="assets/mukta.jpeg" class="photo" alt="Mukta Roy" loading="lazy"></div>
+      <div class="name">Mukta Roy</div>
+      <div class="divider"></div>
+      <div class="role">
+        <h3>Master of Science</h3>
+        <h3>National University, Bangladesh</h3>
+      </div>
+    </article>
+
+    <article class="card" style="--i:2">
+      <div class="photo-wrap"><img src="assets/Rafi.jpeg" class="photo" alt="Rafi Shariar" loading="lazy"></div>
+      <div class="name">Rafi Shariar</div>
+      <div class="divider"></div>
+      <div class="role">
+        <h3>B.Sc. in Computer Science &amp; Engineering</h3>
+        <h3>Daffodil International University</h3>
+      </div>
+    </article>
+
+    <article class="card" style="--i:3">
+      <div class="photo-wrap"><img src="assets/sumaya.jpeg" class="photo" alt="Sumaya Islam" loading="lazy"></div>
+      <div class="name">Sumaya Islam</div>
+      <div class="divider"></div>
+      <div class="role">
+        <h3>Bachelor of Arts in English</h3>
+        <h3>Dhaka University</h3>
+      </div>
+    </article>
+
+    <article class="card" style="--i:4">
+      <div class="photo-wrap"><img src="assets/Seam.jpeg" class="photo" alt="Sultan Nasir Uddin Seam" loading="lazy"></div>
+      <div class="name">Sultan Nasir Uddin Seam</div>
+      <div class="divider"></div>
+      <div class="role">
+        <h3>B.Sc. in Computer Science &amp; Engineering</h3>
+        <h3>Green University Bangladesh</h3>
+      </div>
+    </article>
+
+    <article class="card" style="--i:5">
+      <div class="photo-wrap"><img src="assets/suma.jpeg" class="photo" alt="Sumayea Rahman" loading="lazy"></div>
+      <div class="name">Sumayea Rahman</div>
+      <div class="divider"></div>
+      <div class="role">
+        <h3>BBA &amp; MBA in Finance and Banking</h3>
+        <h3>Jagannath University</h3>
+      </div>
+    </article>
+
+  </main>
+</div>
+
+</body>
+</html>
