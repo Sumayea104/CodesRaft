@@ -6,9 +6,7 @@
 <meta name="theme-color" content="#02020a">
 <title>CodesRaft | Employee Directory</title>
 <style>
-  /* =========================================================
-     1. Variables
-     ========================================================= */
+
   :root {
     --bg: #02020a;
     --blue: #4f8cff;
@@ -24,9 +22,6 @@
     --gap: clamp(14px, 2.4vw, 26px);
   }
 
-  /* =========================================================
-     2. Reset / base
-     ========================================================= */
   *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
   html {
@@ -56,9 +51,6 @@
 
   img { max-width: 100%; }
 
-  /* =========================================================
-     3. Page container
-     ========================================================= */
   .page {
     width: 100%;
     max-width: 1080px;
@@ -72,9 +64,6 @@
       0 0 120px rgba(155, 107, 255, .10);
   }
 
-  /* =========================================================
-     4. Header
-     ========================================================= */
   .header {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -153,9 +142,6 @@
     80%, 100% { left: 110%; }
   }
 
-  /* =========================================================
-     5. Cards grid
-     ========================================================= */
   .grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -191,7 +177,7 @@
     pointer-events: none;
   }
 
-  /* gradient ring (visible on hover / focus) */
+
   .card::after {
     content: "";
     position: absolute;
@@ -214,7 +200,6 @@
     background: #1a1a28;
   }
 
-  /* taller portrait photo */
   .photo {
     display: block;
     width: 100%;
@@ -271,9 +256,6 @@
     letter-spacing: .3px;
   }
 
-  /* =========================================================
-     6. Interaction (only on devices that can hover)
-     ========================================================= */
   @media (hover: hover) {
     .logo:hover {
       transform: scale(1.04);
@@ -297,9 +279,7 @@
     .card:hover .divider { width: 90px; }
   }
 
-  /* =========================================================
-     7. Responsive breakpoints
-     ========================================================= */
+
 
   /* Tablet: 2 columns */
   @media (max-width: 900px) {
@@ -338,9 +318,6 @@
     .page { max-width: 1240px; }
   }
 
-  /* =========================================================
-     8. Accessibility + print
-     ========================================================= */
   .card:focus-within::after { opacity: 1; }
 
   @media (prefers-reduced-motion: reduce) {
@@ -354,6 +331,242 @@
     body { background: #000; padding: 0; }
     .page { max-width: 100%; border-radius: 0; box-shadow: none; }
     .card { animation: none; break-inside: avoid; }
+  }
+
+  .card { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .card.is-open { opacity: 0; transition: opacity .25s ease; }
+  .card:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: grid;
+    place-items: center;
+    padding: max(16px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right))
+             max(16px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+    background: rgba(2, 2, 10, .72);
+    -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .4s ease, visibility 0s linear .5s;
+  }
+
+  .overlay.open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity .35s ease, visibility 0s;
+  }
+
+  .panel {
+    position: relative;
+    width: min(880px, 100%);
+    max-height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    overflow: hidden;
+    background: linear-gradient(180deg, #131326 0%, #07070f 100%);
+    border: 1px solid rgba(140, 150, 255, .45);
+    border-radius: 22px;
+    box-shadow: 0 30px 90px rgba(0,0,0,.8),
+                0 0 60px rgba(79,140,255,.25),
+                0 0 90px rgba(155,107,255,.20);
+    transform-origin: center;
+    transition: transform .5s cubic-bezier(.22, .8, .2, 1);
+    will-change: transform;
+  }
+
+  .d-photo { min-height: 0; background: #1a1a28; }
+
+  .d-photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 320px;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .d-body {
+    padding: clamp(22px, 4vw, 40px);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 22px;
+  }
+
+  .d-body h2 {
+    font-size: clamp(22px, 3.4vw, 30px);
+    font-weight: 700;
+    line-height: 1.2;
+    background: linear-gradient(90deg, #fff 0%, #bcd0ff 50%, #cdb6ff 100%);
+    -webkit-background-clip: text;
+            background-clip: text;
+    color: transparent;
+    overflow-wrap: anywhere;
+  }
+
+  .d-title {
+    margin-top: 8px;
+    color: var(--accent);
+    font-size: 13px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .d-divider { margin: 16px 0 0; width: 56px; }
+
+  .d-list { display: grid; gap: 14px; }
+
+  .d-row {
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(122, 162, 255, .18);
+  }
+
+  .d-row:last-child { border-bottom: 0; padding-bottom: 0; }
+
+  .d-row dt {
+    color: #8793c9;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .d-row dd {
+    margin-top: 4px;
+    font-size: 15px;
+    line-height: 1.45;
+    color: #eceefa;
+    overflow-wrap: anywhere;
+  }
+
+  .d-row a { color: var(--accent); text-decoration: none; border-bottom: 1px solid rgba(159,180,255,.4); }
+  .d-row a:hover { color: #fff; }
+
+  .d-bio { color: var(--muted); font-size: 14px; line-height: 1.65; }
+
+  .close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    z-index: 2;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    line-height: 1;
+    color: #fff;
+    background: rgba(10, 10, 24, .7);
+    border: 1px solid rgba(140, 150, 255, .5);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background .25s ease, box-shadow .25s ease, transform .25s ease;
+  }
+
+  .close:hover { background: rgba(79, 140, 255, .35); box-shadow: 0 0 18px var(--glow-blue); transform: rotate(90deg); }
+  .close:focus-visible { outline: 2px solid var(--purple); outline-offset: 2px; }
+
+  /* content slides in a moment after the panel opens */
+  .d-item, .d-bio {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity .4s ease, transform .5s ease;
+  }
+  .overlay.open .d-item,
+  .overlay.open .d-bio { opacity: 1; transform: none; transition-delay: .22s; }
+  .overlay.open .d-section { transition-delay: .3s; }
+  .overlay.open .d-links   { transition-delay: .38s; }
+
+  /* Phone / small tablet: stacked popup, scrollable */
+  @media (max-width: 720px) {
+    .panel {
+      display: block;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      border-radius: 18px;
+    }
+    .d-photo img { min-height: 0; height: auto; aspect-ratio: 4 / 4; max-height: 52dvh; }
+    .d-body { overflow: visible; justify-content: flex-start; }
+  }
+
+  @media (max-height: 480px) and (orientation: landscape) {
+    .panel { display: grid; grid-template-columns: 1fr 1.4fr; grid-template-rows: none; overflow: hidden; }
+    .d-photo img { height: 100%; aspect-ratio: auto; max-height: none; }
+    .d-body { overflow-y: auto; justify-content: flex-start; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .d-item, .d-bio { opacity: 1; transform: none; }
+  }
+
+  /* ---------- Expertise + links ---------- */
+  [hidden] { display: none !important; }
+
+  .d-label {
+    color: #8793c9;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .chips { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+
+  .chip {
+    padding: 6px 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+    color: #d7defc;
+    background: rgba(79, 140, 255, .10);
+    border: 1px solid rgba(122, 162, 255, .35);
+    border-radius: 999px;
+    overflow-wrap: anywhere;
+  }
+
+  .d-links { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    background: linear-gradient(135deg, rgba(79,140,255,.25), rgba(155,107,255,.25));
+    border: 1px solid rgba(140, 150, 255, .5);
+    border-radius: 12px;
+    transition: box-shadow .3s ease, transform .3s ease, border-color .3s ease;
+  }
+
+  .link-btn:hover {
+    border-color: rgba(180, 190, 255, .9);
+    box-shadow: 0 0 20px var(--glow-blue), 0 0 28px rgba(155,107,255,.3);
+    transform: translateY(-2px);
+  }
+
+  .link-btn:focus-visible { outline: 2px solid var(--purple); outline-offset: 3px; }
+
+  .overlay.open .d-list    { transition-delay: .46s; }
+  .overlay.open .d-bio     { transition-delay: .54s; }
+
+  /* Last orphan card centered (7 employees) */
+  @media (min-width: 901px) {
+    .grid > .card:last-child:nth-child(3n + 1) { grid-column: 2; }
+  }
+  @media (max-width: 900px) and (min-width: 721px) and (min-height: 481px) {
+    .grid > .card:last-child:nth-child(odd) {
+      grid-column: 1 / -1;
+      justify-self: center;
+      width: calc(50% - var(--gap) / 2);
+    }
+  }
+  @media (max-height: 480px) and (orientation: landscape) {
+    .grid > .card:last-child:nth-child(3n + 1) { grid-column: 2; }
   }
 </style>
 </head>
@@ -377,82 +590,309 @@
     </div>
   </header>
 
-  <main class="grid">
-
-    <article class="card" style="--i:0">
-      <div class="photo-wrap"><img src="assets/arafat.jpeg" class="photo" alt="Soyeb Ahmed Arafat" loading="lazy" decoding="async"></div>
-      <div class="info">
-        <div class="name">Soyeb Ahmed Arafat</div>
-        <div class="divider"></div>
-        <div class="role">
-          <h3>Founder</h3>
-          <h3>CodesRaft</h3>
-        </div>
-      </div>
-    </article>
-
-    <article class="card" style="--i:1">
-      <div class="photo-wrap"><img src="assets/mukta.jpeg" class="photo" alt="Mukta Roy" loading="lazy" decoding="async"></div>
-      <div class="info">
-        <div class="name">Mukta Roy</div>
-        <div class="divider"></div>
-        <div class="role">
-          <h3>Master of Science</h3>
-          <h3>National University, Bangladesh</h3>
-        </div>
-      </div>
-    </article>
-
-    <article class="card" style="--i:2">
-      <div class="photo-wrap"><img src="assets/Rafi.jpeg" class="photo" alt="Rafi Shariar" loading="lazy" decoding="async"></div>
-      <div class="info">
-        <div class="name">Rafi Shariar</div>
-        <div class="divider"></div>
-        <div class="role">
-          <h3>B.Sc. in Computer Science &amp; Engineering</h3>
-          <h3>Daffodil International University</h3>
-        </div>
-      </div>
-    </article>
-
-    <article class="card" style="--i:3">
-      <div class="photo-wrap"><img src="assets/sumaya.jpeg" class="photo" alt="Sumaya Islam" loading="lazy" decoding="async"></div>
-      <div class="info">
-        <div class="name">Sumaya Islam</div>
-        <div class="divider"></div>
-        <div class="role">
-          <h3>Bachelor of Arts in English</h3>
-          <h3>Dhaka University</h3>
-        </div>
-      </div>
-    </article>
-
-    <article class="card" style="--i:4">
-      <div class="photo-wrap"><img src="assets/Seam.jpeg" class="photo" alt="Sultan Nasir Uddin Seam" loading="lazy" decoding="async"></div>
-      <div class="info">
-        <div class="name">Sultan Nasir Uddin Seam</div>
-        <div class="divider"></div>
-        <div class="role">
-          <h3>B.Sc. in Computer Science &amp; Engineering</h3>
-          <h3>Green University Bangladesh</h3>
-        </div>
-      </div>
-    </article>
-
-    <article class="card" style="--i:5">
-      <div class="photo-wrap"><img src="assets/suma.jpeg" class="photo" alt="Sumayea Rahman" loading="lazy" decoding="async"></div>
-      <div class="info">
-        <div class="name">Sumayea Rahman</div>
-        <div class="divider"></div>
-        <div class="role">
-          <h3>BBA &amp; MBA in Finance and Banking</h3>
-          <h3>Jagannath University</h3>
-        </div>
-      </div>
-    </article>
-
-  </main>
+  <main class="grid" id="grid" aria-label="Employees"></main>
 </div>
+
+
+<!-- Employee details popup -->
+<div class="overlay" id="overlay" aria-hidden="true">
+  <section class="panel" id="panel" role="dialog" aria-modal="true" aria-labelledby="d-name">
+    <button class="close" id="close" type="button" aria-label="Close details">&times;</button>
+    <div class="d-photo"><img id="d-img" alt=""></div>
+    <div class="d-body">
+      <div class="d-item">
+        <h2 id="d-name"></h2>
+        <p class="d-title" id="d-title"></p>
+        <div class="divider d-divider"></div>
+      </div>
+      <div class="d-section d-item" id="d-expertise" hidden>
+        <h4 class="d-label">Expertise</h4>
+        <ul class="chips" id="d-chips"></ul>
+      </div>
+      <div class="d-links d-item" id="d-links" hidden></div>
+      <dl class="d-list d-item" id="d-list"></dl>
+      <p class="d-bio d-item" id="d-bio"></p>
+    </div>
+  </section>
+</div>
+
+<script>
+
+const employees = [
+  {
+    name: "Soyeb Ahmed Arafat", photo: "assets/arafat.jpeg",
+    line1: "Founder", line2: "CodesRaft",
+    details: [["Company", "CodesRaft"]],
+    expertise: "Full-Stack Web Development, MERN Stack (MongoDB, Express.js, React, Node.js), JavaScript, SaaS Platforms, IT Solutions",
+    portfolio: "https://arafat0122.netlify.app/",
+    linkedin: "https://www.linkedin.com/in/soyeb-arafat/",
+    github: "",
+    bio: "Founder of CodesRaft and Full-Stack Web Developer specializing in delivering powerful web apps, mobile apps, design, video editing, and marketing strategies for startups and businesses."
+  },
+  {
+    name: "Mukta Roy", photo: "assets/mukta.jpeg",
+    line1: "Master of Science", line2: "National University, Bangladesh",
+    details: [["University", "National University, Bangladesh"]],
+    expertise: "React.js, Next.js, TypeScript, JavaScript (ES6+), Tailwind CSS, Node.js, Express.js, MongoDB, Firebase, REST APIs, JWT Authentication",
+    portfolio: "https://mukta-roy.web.app",
+    linkedin: "https://www.linkedin.com/in/roy-mukta/",
+    github: "https://github.com/roymukta21",
+    bio: "Web Developer at CodesRaft passionate about building modern, scalable, and user-friendly web applications, specializing in MERN stack and frontend-focused technologies."
+  },
+  {
+    name: "Rafi Shariar", photo: "assets/Rafi.jpeg",
+    line1: "Bachelor of Science in Computer Science & Engineering", line2: "Daffodil International University",
+    details: [["University", "Daffodil International University"]],
+    expertise: "Next.js, React.js, TypeScript, JavaScript, Tailwind CSS, Node.js, Express.js, PostgreSQL, MongoDB, REST APIs",
+    portfolio: "https://rafi-shariar.vercel.app",
+    linkedin: "https://www.linkedin.com/in/rafi-shariar/",
+    github: "",
+    bio: "Frontend Developer at CodesRaft and Computer Science student at Daffodil International University, specializing in building scalable web solutions with Next.js, React, and Node.js."
+  },
+  {
+    name: "Sumaya Islam", photo: "assets/sumaya.jpeg",
+    line1: "Bachelor of Arts in English", line2: "Dhaka University",
+    details: [["University", "Dhaka University"]],
+    expertise: "React.js, Next.js, TypeScript, JavaScript, Tailwind CSS, Node.js, Express.js, MongoDB, PostgreSQL, REST APIs",
+    portfolio: "https://portfolio-five-mu-q8grw5lat5.vercel.app",
+    linkedin: "https://www.linkedin.com/in/sumayaislamm/",
+    github: "",
+    bio: "Frontend Developer Intern at CodesRaft and Full-Stack Developer passionate about building modern, responsive, and user-friendly web applications with clean architecture."
+  },
+  {
+    name: "Sultan Nasir Uddin Seam", photo: "assets/Seam.jpeg",
+    line1: "B.Sc. in Computer Science & Engineering", line2: "Green University Bangladesh",
+    details: [["University", "Green University Bangladesh"]],
+    expertise: "Full-Stack Developer | React, Next.js, Node.js, TypeScript, PostgreSQL, Prisma, MongoDB, Tailwind CSS, REST APIs",
+    portfolio: "https://snu-seam.vercel.app/",
+    linkedin: "https://www.linkedin.com/in/snu-seam/",
+    github: "https://github.com/Seam7819",
+    bio: "Frontend Developer at CodesRaft and Computer Science and Engineering student at Green University of Bangladesh, building modern, scalable, and user-focused web applications from concept to deployment."
+  },
+  {
+    name: "Mahbuba Rahman Chowdhury", photo: "assets/muna.jpeg",
+    line1: "Bachelor of Science in Computer Science & Engineering", line2: "Metropolitan University, Sylhet",
+    details: [["University", "Metropolitan University, Sylhet"]],
+    expertise: "Frontend Development, Python, C, Java, C++, Artificial Intelligence, Web Development",
+    portfolio: "",
+    linkedin: "https://www.linkedin.com/in/mahbuba-rahman-chowdhury-5961a3378/",
+    github: "",
+    bio: "Frontend Developer at CodesRaft and Computer Science and Engineering student at Metropolitan University with a strong passion for web development, real-world applications, and Artificial Intelligence research."
+  },
+  {
+    name: "Sumayea Rahman", photo: "assets/suma.jpeg",
+    line1: "BBA & MBA in Finance and Banking", line2: "Jagannath University",
+    details: [["University", "Jagannath University, Dhaka, Bangladesh"]],
+    expertise: "Frontend Developer, React, Next.js, Node.js, FastAPI, RAG, TypeScript, Tailwind CSS, Python, PostgreSQL",
+    portfolio: "https://sumayea-dev.vercel.app",
+    linkedin: "https://www.linkedin.com/in/sumayea-rahman/",
+    github: "https://github.com/Sumayea104",
+    bio: "Frontend Developer at CodesRaft and Finance graduate from Jagannath University, combining analytical financial expertise with full-stack and AI engineering to build secure, scalable, and high-performance applications."
+  },
+  {
+    name: "Taharim Hasan Mim", 
+    photo: "assets/mim.jpeg",
+    line1: "Frontend Developer Intern", 
+    line2: "CodesRaft",
+    details: [["Company", "CodesRaft"]],
+    expertise: "JavaScript, TypeScript, React.js, Next.js, Node.js, Express.js, Prisma, SQL, NoSQL, Tailwind CSS, REST APIs",
+    portfolio: "https://taharim-mim.vercel.app", 
+    linkedin: "https://www.linkedin.com/in/th-mim10/",
+    github: "https://github.com/TaharimMim", 
+    bio: "Frontend Developer Intern at CodesRaft and aspiring Full-Stack Developer, passionate about building dynamic, user-friendly web applications using JavaScript, TypeScript, Next.js, React, and Node.js."
+  }
+];
+
+/* ---------- helpers ---------- */
+const $ = (id) => document.getElementById(id);
+const grid = $("grid"), overlay = $("overlay"), panel = $("panel");
+const closeBtn = $("close");
+let activeCard = null, closing = false;
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text != null) n.textContent = text;
+  return n;
+}
+
+/* ---------- build cards ---------- */
+employees.forEach((p, i) => {
+  const card = el("article", "card");
+  card.style.setProperty("--i", i);
+  card.tabIndex = 0;
+  card.setAttribute("role", "button");
+  card.setAttribute("aria-haspopup", "dialog");
+  card.setAttribute("aria-label", p.name + " - view details");
+
+  const wrap = el("div", "photo-wrap");
+  const img = el("img", "photo");
+  img.src = p.photo; img.alt = p.name; img.loading = "lazy"; img.decoding = "async";
+  wrap.appendChild(img);
+
+  const info = el("div", "info");
+  const role = el("div", "role");
+  role.append(el("h3", null, p.line1), el("h3", null, p.line2));
+  info.append(el("div", "name", p.name), el("div", "divider"), role);
+
+  card.append(wrap, info);
+  card.addEventListener("click", () => openDetails(card, p));
+  card.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDetails(card, p); }
+  });
+  grid.appendChild(card);
+});
+
+/* ---------- extra helpers ---------- */
+const ICONS = {
+  portfolio: '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.6 2.7 3.9 5.7 3.9 9s-1.3 6.3-3.9 9c-2.6-2.7-3.9-5.7-3.9-9S9.4 5.7 12 3z"/></svg>',
+  linkedin:  '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.75h4v11H3v-11zM9.75 9.75h3.8v1.5h.05c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.78 2.65 4.78 6.1v5.45h-4v-4.83c0-1.15-.02-2.63-1.6-2.63-1.6 0-1.85 1.25-1.85 2.55v4.91h-4v-11z"/></svg>',
+  github:    '<svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>'
+};
+
+/* comma diye alada kore, kintu ( ) er bhitorer comma ke bhange na */
+function splitList(v) {
+  if (Array.isArray(v)) return v.map((x) => String(x).trim()).filter(Boolean);
+  if (!v) return [];
+  const out = []; let depth = 0, cur = "";
+  for (const ch of String(v)) {
+    if (ch === "(") depth++;
+    if (ch === ")") depth = Math.max(0, depth - 1);
+    if ((ch === "," || ch === "|") && depth === 0) { out.push(cur.trim()); cur = ""; }
+    else cur += ch;
+  }
+  out.push(cur.trim());
+  return out.filter(Boolean);
+}
+
+function safeUrl(u) {
+  if (!u) return "";
+  u = String(u).trim();
+  if (!/^https?:\/\//i.test(u)) u = "https://" + u;
+  try { const x = new URL(u); return /^https?:$/.test(x.protocol) ? x.href : ""; }
+  catch (e) { return ""; }
+}
+
+/* ---------- fill popup ---------- */
+function fill(p) {
+  $("d-img").src = p.photo;
+  $("d-img").alt = p.name;
+  $("d-name").textContent = p.name;
+  $("d-title").textContent = p.line1;
+
+  const list = $("d-list");
+  list.replaceChildren();
+  const rows = [...p.details];
+  if (p.department) rows.push(["Department", p.department]);
+  if (p.joined)     rows.push(["Joined", p.joined]);
+  if (p.location)   rows.push(["Location", p.location]);
+  if (p.email)      rows.push(["Email", p.email, "mailto:" + p.email]);
+  if (p.phone)      rows.push(["Phone", p.phone, "tel:" + p.phone.replace(/\s+/g, "")]);
+
+  rows.forEach(([k, v, href]) => {
+    const row = el("div", "d-row");
+    row.appendChild(el("dt", null, k));
+    const dd = el("dd");
+    if (href) { const a = el("a", null, v); a.href = href; dd.appendChild(a); }
+    else dd.textContent = v;
+    row.appendChild(dd);
+    list.appendChild(row);
+  });
+
+  const bio = $("d-bio");
+  bio.textContent = p.bio || "";
+  bio.hidden = !p.bio;
+
+  list.hidden = !list.children.length;
+
+
+  const chips = $("d-chips");
+  chips.replaceChildren();
+  splitList(p.expertise).forEach((t) => chips.appendChild(el("li", "chip", t)));
+  $("d-expertise").hidden = !chips.children.length;
+
+  const links = $("d-links");
+  links.replaceChildren();
+  [["Portfolio", p.portfolio, ICONS.portfolio],
+   ["LinkedIn",  p.linkedin,  ICONS.linkedin],
+   ["GitHub",    p.github,    ICONS.github]].forEach(([label, raw, icon]) => {
+    const url = safeUrl(raw);
+    if (!url) return;
+    const a = el("a", "link-btn");
+    a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+    a.setAttribute("aria-label", label + " (opens in a new tab)");
+    a.insertAdjacentHTML("beforeend", icon);
+    a.appendChild(el("span", null, label));
+    links.appendChild(a);
+  });
+  links.hidden = !links.children.length;
+}
+
+
+function transformFrom(cardRect, panelRect) {
+  const dx = (cardRect.left + cardRect.width / 2) - (panelRect.left + panelRect.width / 2);
+  const dy = (cardRect.top + cardRect.height / 2) - (panelRect.top + panelRect.height / 2);
+  const s = Math.min(cardRect.width / panelRect.width, 1);
+  return "translate(" + dx + "px," + dy + "px) scale(" + s + ")";
+}
+
+function openDetails(card, p) {
+  if (closing) return;
+  activeCard = card;
+  fill(p);
+
+  overlay.style.visibility = "visible";
+  panel.style.transition = "none";
+  panel.style.transform = "none";
+  const pr = panel.getBoundingClientRect();
+  const cr = card.getBoundingClientRect();
+  panel.style.transform = transformFrom(cr, pr);
+  panel.getBoundingClientRect();              // reflow
+  panel.style.transition = "";
+
+  document.body.style.overflow = "hidden";
+  overlay.setAttribute("aria-hidden", "false");
+  overlay.classList.add("open");
+  card.classList.add("is-open");
+  panel.style.transform = "none";
+  overlay.style.visibility = "";
+  setTimeout(() => closeBtn.focus({ preventScroll: true }), 50);
+}
+
+function closeDetails() {
+  if (!overlay.classList.contains("open") || closing) return;
+  closing = true;
+  const card = activeCard;
+  const pr = panel.getBoundingClientRect();
+  const cr = card.getBoundingClientRect();
+  panel.style.transform = transformFrom(cr, pr);
+  overlay.classList.remove("open");
+  card.classList.remove("is-open");
+  overlay.setAttribute("aria-hidden", "true");
+
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setTimeout(() => {
+    panel.style.transform = "none";
+    document.body.style.overflow = "";
+    closing = false;
+    card.focus({ preventScroll: true });
+  }, reduce ? 0 : 520);
+}
+
+closeBtn.addEventListener("click", closeDetails);
+overlay.addEventListener("click", (e) => { if (e.target === overlay) closeDetails(); });
+
+document.addEventListener("keydown", (e) => {
+  if (!overlay.classList.contains("open")) return;
+  if (e.key === "Escape") { closeDetails(); return; }
+  if (e.key === "Tab") {                       // focus popup er bhitore rakhe
+    const f = panel.querySelectorAll("button, a[href]");
+    const first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+});
+</script>
 
 </body>
 </html>
